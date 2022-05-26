@@ -1,0 +1,15 @@
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\bin\Debug\net6.0\BatalhaNaval.exe
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\bin\Debug\net6.0\BatalhaNaval.deps.json
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\bin\Debug\net6.0\BatalhaNaval.runtimeconfig.json
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\bin\Debug\net6.0\BatalhaNaval.dll
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\bin\Debug\net6.0\BatalhaNaval.pdb
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\obj\Debug\net6.0\BatalhaNaval.csproj.AssemblyReference.cache
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\obj\Debug\net6.0\BatalhaNaval.GeneratedMSBuildEditorConfig.editorconfig
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\obj\Debug\net6.0\BatalhaNaval.AssemblyInfoInputs.cache
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\obj\Debug\net6.0\BatalhaNaval.AssemblyInfo.cs
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\obj\Debug\net6.0\BatalhaNaval.csproj.CoreCompileInputs.cache
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\obj\Debug\net6.0\BatalhaNaval.dll
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\obj\Debug\net6.0\refint\BatalhaNaval.dll
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\obj\Debug\net6.0\BatalhaNaval.pdb
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\obj\Debug\net6.0\BatalhaNaval.genruntimeconfig.cache
+D:\Let's Code\Lógica de Prog I\TrabalhoFinal\BatalhaNaval\BatalhaNaval\obj\Debug\net6.0\ref\BatalhaNaval.dll
