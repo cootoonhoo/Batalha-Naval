@@ -33,13 +33,13 @@ Quando um disparo for ceiteio o programa deve apresentar uma mensagem e também 
 */
 
 bool AcabouJogo = false;
+bool verificador;
 
 Jogador Jogador1 = CadastrarJogador();
 Jogador Jogador2 = SegundoJogador();
 
-
-PreencherTabuleiro(Jogador1);
 PreencherTabuleiro(Jogador2);
+PreencherTabuleiro(Jogador1);
 
 Console.Clear();
 Console.BackgroundColor = ConsoleColor.Blue;
@@ -51,8 +51,8 @@ Console.ReadLine();
 do
 {
     RenderizarTabuleiro(Jogador1);
-    PosicionarPecas(Jogador1);
-} while (PosicionarPecas(Jogador1));
+    verificador = PosicionarPecas(Jogador1);
+} while (verificador);
 
 RenderizarTabuleiro(Jogador1);
 Console.BackgroundColor = ConsoleColor.Blue;
@@ -72,9 +72,17 @@ if (Jogador2.EhRobo == false)
     do
     {
         RenderizarTabuleiro(Jogador2);
-        PosicionarPecas(Jogador2);
-    } while (PosicionarPecas(Jogador2));
+        verificador = PosicionarPecas(Jogador2);
+    } while (verificador);
 }
+
+else {
+    do {
+        verificador = PosicionarPecasCPU(Jogador2);
+    }while (verificador);
+}
+RenderizarTabuleiro(Jogador2);
+
 
 // --- * ---
 // Funções
@@ -151,7 +159,8 @@ void RenderizarTabuleiro(Jogador Jogador)
     }
 }
 
-void ImprimirErro(string Erro) {
+void ImprimirErro(string Erro)
+{
     Console.BackgroundColor = ConsoleColor.Red;
     Console.Write(Erro);
     Console.BackgroundColor = ConsoleColor.Black;
@@ -220,8 +229,9 @@ bool PosicionarPecas(Jogador Jogador)
         Console.WriteLine("Peça \t\t\t Tamanho \t\t\t Quantidade");
         Console.WriteLine();
 
-        foreach (var Sigla in TilesPecas.Keys) {
-        Console.WriteLine($"{NomeDasPecas[Sigla]}({Sigla})   \t {TilesPecas[Sigla] + 1} espaços \t\t\t {Jogador.QntPecas[Sigla]}");
+        foreach (var Sigla in TilesPecas.Keys)
+        {
+            Console.WriteLine($"{NomeDasPecas[Sigla]}({Sigla})   \t {TilesPecas[Sigla] + 1} espaços \t\t\t {Jogador.QntPecas[Sigla]}");
         }
 
         Console.WriteLine("Digite uma Peça (Sigla):");
@@ -274,6 +284,11 @@ bool PosicionarPecas(Jogador Jogador)
             else num = (Input[1].ToString());
             Y2 = int.Parse(num) - 1;
             X2 = (int)Input[0] - 65;
+
+            if (X2 != X1 && Y2 != Y1) {
+                ImprimirErro("Você selecionou uma diagonal");
+                VerificaçãoCoordenadas = false;
+            }
 
             if (Math.Abs(X2 - X1) != TilesPecas[PecaEscolhida] && Math.Abs(Y2 - Y1) != TilesPecas[PecaEscolhida])
             {
@@ -335,7 +350,8 @@ bool PosicionarPecas(Jogador Jogador)
                 }
             }
         }
-        if (EspacoOcupado) {
+        if (EspacoOcupado)
+        {
             ImprimirErro("O espaço selecionado esta ocupado");
         }
     } while (EspacoOcupado);
@@ -379,6 +395,157 @@ bool PosicionarPecas(Jogador Jogador)
     bool temPeca = true;
 
     foreach (var NumPeca in Jogador.QntPecas)
+    {
+        temPeca = true;
+        if (NumPeca.Value != 0)
+        {
+            temPeca = true;
+            break;
+        }
+        else temPeca = false;
+    }
+    return temPeca;
+}
+
+bool PosicionarPecasCPU(Jogador Computador) {
+    Dictionary<string, int> TilesPecas = new Dictionary<string, int>()
+    {
+        {"PS", 4},
+        {"NT", 3},
+        {"DS", 2},
+        {"SB", 1}
+    };
+
+    Dictionary<string, string> TraducaoPecas = new Dictionary<string, string>()
+    {
+        {"PS", "P"},
+        {"NT", "N"},
+        {"DS", "D"},
+        {"SB", "S"}
+    };
+
+    Random Aleatorio = new Random();
+    string[] ListaPecas = { "PS", "NT", "DS", "SB" };
+    string PecaEscolhida;
+    do
+    {
+        PecaEscolhida = ListaPecas[Aleatorio.Next(0, ListaPecas.Length)];
+    } while (Computador.QntPecas[PecaEscolhida] == 0);
+    bool VerificaçãoCoordenadas, EspacoOcupado;
+    int X1, X2, Y1, Y2;
+    do
+    {
+        EspacoOcupado = false;
+        do
+        {
+            VerificaçãoCoordenadas = true;
+            Y1 = Aleatorio.Next(0, 9);
+            X1 = Aleatorio.Next(0, 9);
+            Y2 = Aleatorio.Next(0, 9);
+            X2 = Aleatorio.Next(0, 9);
+            if (X2 != X1 && Y2 != Y1)
+            {
+                VerificaçãoCoordenadas = false;
+            }
+            if (Math.Abs(X2 - X1) != TilesPecas[PecaEscolhida] && Math.Abs(Y2 - Y1) != TilesPecas[PecaEscolhida])
+            {
+
+                VerificaçãoCoordenadas = false;
+            }
+        } while (!VerificaçãoCoordenadas);
+
+        if (X1 == X2)
+        {
+            if (Y2 > Y1)
+            {
+                for (int i = Y1; i <= Y2; i++)
+                {
+                    if (Computador.Tabuleiro[X1, i] != ".")
+                    {
+                        EspacoOcupado = true;
+                        break;
+                    };
+                }
+            }
+            else
+            {
+                for (int i = Y2; i <= Y1; i++)
+                {
+                    if (Computador.Tabuleiro[X1, i] != ".")
+                    {
+                        EspacoOcupado = true;
+                        break;
+                    };
+                }
+
+
+            }
+        }
+        else
+        {
+            if (X2 > X1)
+            {
+                for (int i = X1; i <= X2; i++)
+                {
+                    if (Computador.Tabuleiro[i, Y1] != ".")
+                    {
+                        EspacoOcupado = true;
+                        break;
+                    };
+                }
+            }
+            else
+            {
+                for (int i = X2; i <= X1; i++)
+                {
+                    if (Computador.Tabuleiro[i, Y1] != ".")
+                    {
+                        EspacoOcupado = true;
+                        break;
+                    };
+                }
+            }
+        }
+    } while (EspacoOcupado);
+
+    if (X1 == X2)
+    {
+        if (Y2 > Y1)
+        {
+            for (int i = Y1; i <= Y2; i++)
+            {
+                Computador.Tabuleiro[X1, i] = TraducaoPecas[PecaEscolhida];
+            }
+        }
+        else
+        {
+            for (int i = Y2; i <= Y1; i++)
+            {
+                Computador.Tabuleiro[X1, i] = TraducaoPecas[PecaEscolhida];
+            }
+        }
+    }
+    else
+    {
+        if (X2 > X1)
+        {
+            for (int i = X1; i <= X2; i++)
+            {
+                Computador.Tabuleiro[i, Y1] = TraducaoPecas[PecaEscolhida];
+            }
+        }
+        else
+        {
+            for (int i = X2; i <= X1; i++)
+            {
+                Computador.Tabuleiro[i, Y1] = TraducaoPecas[PecaEscolhida];
+            }
+        }
+    }
+    Computador.QntPecas[PecaEscolhida]--;
+    bool temPeca = true;
+
+    foreach (var NumPeca in Computador.QntPecas)
     {
         temPeca = true;
         if (NumPeca.Value != 0)
