@@ -1,5 +1,4 @@
-﻿/*
- * Elementos * 
+﻿/* Elementos * 
  *      2 Matrizes 10x10 (um pra cada jogador)
  *             - Peças -
  *      1 Porta Avião (5 tiles)     PS
@@ -23,12 +22,9 @@ O mapa deve representar os espaços da seguinte maneira:
 A cada turno o programa deve limpar a tela e apresentar o tabuleiro adversário
 Quando um disparo for ceiteio o programa deve apresentar uma mensagem e também quando o disparo for errado.
  * 
- * 
  * Ideias para bornout:
- * Mudar a cor de fundo do console pra representar as embarcações
+ * Mudar a cor de fundo do console pra representar as embarcações 
  * Fazer um tabuleiro legal :)
- * 
- * 
  * Desafio: Fazer um modo vs. Computador
 */
 
@@ -74,6 +70,13 @@ if (Jogador2.EhRobo == false)
         RenderizarTabuleiro(Jogador2);
         verificador = PosicionarPecas(Jogador2);
     } while (verificador);
+
+    RenderizarTabuleiro(Jogador1);
+    Console.BackgroundColor = ConsoleColor.Blue;
+    Console.WriteLine($"Tabuleiro completado com SUCESSO");
+    Console.BackgroundColor = ConsoleColor.Black;
+    Console.WriteLine("Aperte ENTER para continuar");
+    Console.ReadLine();
 }
 
 else {
@@ -81,8 +84,90 @@ else {
         verificador = PosicionarPecasCPU(Jogador2);
     }while (verificador);
 }
-RenderizarTabuleiro(Jogador2);
 
+if (Jogador2.EhRobo == false)
+{
+    do
+    {
+        Console.Clear();
+        Console.BackgroundColor = ConsoleColor.Red;
+        Console.WriteLine($"TURNO DE ATAQUE DO {Jogador1.Nome}");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.WriteLine("Aperte ENTER para continuar");
+        Console.ReadLine();
+
+        AcabouJogo = Ataque(Jogador2);
+        if (AcabouJogo)
+        {
+            Console.WriteLine($"---------------------------------------");
+            Console.WriteLine($"PARABÉNS! {Jogador1.Nome} é o vencendor");
+            Console.WriteLine($"---------------------------------------");
+            return;
+        }
+        Console.WriteLine("Aperte ENTER para continuar");
+        Console.ReadLine();
+
+        Console.Clear();
+        Console.BackgroundColor = ConsoleColor.Red;
+        Console.WriteLine($"TURNO DE ATAQUE DO {Jogador2.Nome}");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.WriteLine("Aperte ENTER para continuar");
+        Console.ReadLine();
+
+        AcabouJogo = Ataque(Jogador1);
+        Console.WriteLine("Aperte ENTER para continuar");
+        Console.ReadLine();
+        if (AcabouJogo)
+        {
+            Console.WriteLine($"---------------------------------------");
+            Console.WriteLine($"PARABÉNS! {Jogador2.Nome} é o vencendor");
+            Console.WriteLine($"---------------------------------------");
+            return;
+        }
+    } while (AcabouJogo == false);
+}
+
+else {
+    do
+    {
+        Console.Clear();
+        Console.BackgroundColor = ConsoleColor.Red;
+        Console.WriteLine($"TURNO DE ATAQUE DO {Jogador1.Nome}");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.WriteLine("Aperte ENTER para continuar");
+        Console.ReadLine();
+
+        AcabouJogo = Ataque(Jogador2);
+        if (AcabouJogo)
+        {
+            Console.WriteLine($"---------------------------------------");
+            Console.WriteLine($"PARABÉNS! {Jogador1.Nome} é o vencendor");
+            Console.WriteLine($"---------------------------------------");
+            return;
+        }
+        Console.WriteLine("Aperte ENTER para continuar");
+        Console.ReadLine();
+
+        Console.Clear();
+        Console.BackgroundColor = ConsoleColor.Red;
+        Console.WriteLine($"TURNO DE ATAQUE DO {Jogador2.Nome}");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.WriteLine("Aperte ENTER para continuar");
+        Console.ReadLine();
+
+        AcabouJogo = AtaqueCPU(Jogador1);
+        Console.WriteLine("Aperte ENTER para continuar");
+        Console.ReadLine();
+        if (AcabouJogo)
+        {
+            Console.WriteLine($"--------------------------------");
+            Console.WriteLine($"Helo World!");
+            Console.WriteLine($"O {Jogador2.Nome} é o vencendor.");
+            Console.WriteLine($"---------------------------------");
+            return;
+        }
+    } while (AcabouJogo == false);
+}
 
 // --- * ---
 // Funções
@@ -126,6 +211,124 @@ Jogador SegundoJogador()
         return CadastrarJogador();
 }
 
+bool Ataque(Jogador Defensor)
+{
+    string InputCoordenada, num;
+    int X, Y;
+    bool JaAtacado = false, Derrotado = false;
+
+    RenderizarTabuleiroDefesa(Defensor);
+    do
+    {
+        JaAtacado = false;
+        do
+        {
+            Console.WriteLine("Digite a posição de ataque:");
+            InputCoordenada = Console.ReadLine();
+            if (string.IsNullOrEmpty(InputCoordenada) || !ValidarCoordenada(InputCoordenada))
+            {
+                ImprimirErro("Input inválido");
+            }
+        } while (string.IsNullOrEmpty(InputCoordenada) || !ValidarCoordenada(InputCoordenada));
+
+        if (InputCoordenada.Length > 2) num = (InputCoordenada[1].ToString() + InputCoordenada[2]);
+        else num = (InputCoordenada[1].ToString());
+        Y = int.Parse(num) - 1;
+        X = (int)InputCoordenada[0] - 65;
+
+        if (Defensor.TabuleiroAtaque[X, Y] == "X" || Defensor.TabuleiroAtaque[X, Y] == "A")
+        {
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.WriteLine("Você já atacou essa posição");
+            Console.BackgroundColor = ConsoleColor.Black;
+            JaAtacado = true;
+        }
+    } while (JaAtacado);
+
+    if (Defensor.Tabuleiro[X, Y] != ".")
+    {
+        Defensor.TabuleiroAtaque[X, Y] = "X";
+        Console.Clear();
+        RenderizarTabuleiroDefesa(Defensor);
+        Console.Write("\n\t");
+        Console.BackgroundColor = ConsoleColor.Green;
+        Console.WriteLine("ACERTOU O DISPARO");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.WriteLine();
+    }
+    else
+    {
+        Defensor.TabuleiroAtaque[X, Y] = "A";
+        Console.Clear();
+        RenderizarTabuleiroDefesa(Defensor);
+        Console.Write("\n\t");
+        Console.BackgroundColor = ConsoleColor.Red;
+        Console.WriteLine("ERROU O DISPARO");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.WriteLine();
+    }
+
+    int QntTilesEmbarcacoes = 0, TirosCorretos = 0;
+
+    foreach (var Tile in Defensor.Tabuleiro)
+        if (Tile != ".") QntTilesEmbarcacoes++;
+
+    foreach (var Tile in Defensor.TabuleiroAtaque)
+        if (Tile == "X") TirosCorretos++;
+
+    if (TirosCorretos == QntTilesEmbarcacoes) Derrotado = true;
+
+    return Derrotado;
+};
+
+bool AtaqueCPU(Jogador Defensor)
+{
+    int X, Y;
+    bool Derrotado = false;
+
+    RenderizarTabuleiroDefesa(Defensor);
+    do
+    {
+        X = new Random().Next(0, 9);
+        Y = new Random().Next(0, 9);
+    } while (Defensor.TabuleiroAtaque[X, Y] == "X" || Defensor.TabuleiroAtaque[X, Y] == "A");
+
+    if (Defensor.Tabuleiro[X, Y] != ".")
+    {
+        Defensor.TabuleiroAtaque[X, Y] = "X";
+        Console.Clear();
+        RenderizarTabuleiroDefesa(Defensor);
+        Console.Write("\n\t");
+        Console.BackgroundColor = ConsoleColor.Green;
+        Console.WriteLine("ACERTOU O DISPARO");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.WriteLine();
+    }
+    else
+    {
+        Defensor.TabuleiroAtaque[X, Y] = "A";
+        Console.Clear();
+        RenderizarTabuleiroDefesa(Defensor);
+        Console.Write("\n\t");
+        Console.BackgroundColor = ConsoleColor.Red;
+        Console.WriteLine("ERROU O DISPARO");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.WriteLine();
+    }
+
+    int QntTilesEmbarcacoes = 0, TirosCorretos = 0;
+
+    foreach (var Tile in Defensor.Tabuleiro)
+        if (Tile != ".") QntTilesEmbarcacoes++;
+
+    foreach (var Tile in Defensor.TabuleiroAtaque)
+        if (Tile == "X") TirosCorretos++;
+
+    if (TirosCorretos == QntTilesEmbarcacoes) Derrotado = true;
+
+    return Derrotado;
+};
+
 void PreencherTabuleiro(Jogador Jogador)
 {
     for (int i = 0; i < Jogador.Tabuleiro.GetLength(0); i++)
@@ -154,6 +357,38 @@ void RenderizarTabuleiro(Jogador Jogador)
             Console.Write(" ");
             Console.Write(Jogador.Tabuleiro[i, j]);
             if (j < Jogador.Tabuleiro.GetLength(1) - 1) Console.Write(" ");
+        }
+        Console.WriteLine();
+    }
+}
+
+void RenderizarTabuleiroDefesa(Jogador Jogador)
+{
+    Console.Clear();
+    Console.WriteLine($"Ataque o tabuleiro de {Jogador.Nome}");
+    for (int i = 0; i < Jogador.TabuleiroAtaque.GetLength(0); i++)
+    {
+        if (i == 0) Console.Write("  ");
+        Console.Write(i + 1 + "  ");
+    }
+    Console.WriteLine();
+    for (int i = 0; i < Jogador.TabuleiroAtaque.GetLength(0); i++)
+    {
+        Console.Write(Convert.ToChar(65 + i));
+        for (int j = 0; j < Jogador.TabuleiroAtaque.GetLength(1); j++)
+        {
+            if (Jogador.TabuleiroAtaque[i, j] == "A")
+            {
+                Console.BackgroundColor = ConsoleColor.DarkBlue;
+            }
+            if (Jogador.TabuleiroAtaque[i, j] == "X")
+            {
+                Console.BackgroundColor = ConsoleColor.Green;
+            }
+            Console.Write(" ");
+            Console.Write(Jogador.TabuleiroAtaque[i, j]);
+            if (j < Jogador.TabuleiroAtaque.GetLength(1) - 1) Console.Write(" ");
+            Console.BackgroundColor = ConsoleColor.Black;
         }
         Console.WriteLine();
     }
@@ -285,7 +520,8 @@ bool PosicionarPecas(Jogador Jogador)
             Y2 = int.Parse(num) - 1;
             X2 = (int)Input[0] - 65;
 
-            if (X2 != X1 && Y2 != Y1) {
+            if (X2 != X1 && Y2 != Y1)
+            {
                 ImprimirErro("Você selecionou uma diagonal");
                 VerificaçãoCoordenadas = false;
             }
@@ -407,7 +643,8 @@ bool PosicionarPecas(Jogador Jogador)
     return temPeca;
 }
 
-bool PosicionarPecasCPU(Jogador Computador) {
+bool PosicionarPecasCPU(Jogador Computador)
+{
     Dictionary<string, int> TilesPecas = new Dictionary<string, int>()
     {
         {"PS", 4},
